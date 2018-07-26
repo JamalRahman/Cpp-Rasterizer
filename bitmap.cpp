@@ -36,7 +36,7 @@ unsigned char* generateBitmapHeader(int height, int width){
     // Declaring 54 char long header data. See BMP specification
     static unsigned char header[] = {      
         0,0,        // BM
-        0,0,0,0,    // Size of bm file
+        0,0,0,0,    // Size of the entire file
         0,0,0,0,    // Reserved - Unused
         0,0,0,0,    // File offset index
         0,0,0,0,    // Info header size ( 4o bytes)
@@ -79,4 +79,8 @@ unsigned char* generateBitmapHeader(int height, int width){
     header[28] = (unsigned char)(defaultBytesPerPixel*8);
 
     return header;
+}
+
+unsigned char* readBitmap(FILE* imageFile){
+    
 }
