@@ -1,4 +1,4 @@
-#include "bitmap.h"
+#include "bitmapImage.h"
 #include <iostream>
 
 int imageHeight, imageWidth;

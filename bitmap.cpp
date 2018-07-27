@@ -1,86 +1,104 @@
-#include "bitmap.h"
+#include <iostream>
 #include <stdio.h>
+#include <string.h>
+#include "bitmap.h"
 
-// Functions    ----------------------------------------------------------------------
 
-void saveBitmap(unsigned char *imageData, int height, int width, char *imageName){
+Bitmap::Bitmap(){
 
-    unsigned char* imageHeader = generateBitmapHeader(height, width);
+}
 
-    // Due to bitmap's image data requiring all rows explained in multiples of 4 byte DWORDS, we determine how many bytes short our rows are of completing a DWORD, and will later pad them
+Bitmap::Bitmap(int w, int h, int bpp) : imageData(NULL), width(w), height(h), bytesPerPixel(bpp){
+    unsigned long dataSize = width*height*bytesPerPixel;
+    imageData = new unsigned char[dataSize];
+    memset(imageData, 0, dataSize);
+}
+
+Bitmap::~Bitmap(){
+    if(imageData) delete[] imageData;
+}
+
+bool Bitmap::writeFile(const char *filename){
+    
+    BitmapHeader header;
+    memset((void*)&header,0,sizeof(BitmapHeader));
+    BitmapInfoHeader infoHeader;
+    memset((void*)&infoHeader,0,sizeof(BitmapInfoHeader));
+
+    header.bitmapType[0] = (unsigned char)'B';
+    header.bitmapType[1] = (unsigned char)'M';
+    header.fileSize = 14+40+bytesPerPixel*height*width;
+    header.offset = 14+40;
+    infoHeader.infoHeaderSize = 40;
+    infoHeader.width = width;
+    infoHeader.height = height;
+    infoHeader.colorPlanes = 1;
+    infoHeader.colorDepth = bytesPerPixel*8;
+
     unsigned char* paddingStructure[3] = {0,0,0};
-    int paddingSize = (4 -(width*defaultBytesPerPixel % 4))%4;
+    int paddingSize = (4 -(width*bytesPerPixel % 4))%4;
 
-    // We open the file
-    FILE* imageFile = fopen(imageName, "wb");
+    FILE* imageFile = fopen(filename,"wb");
+    
+    fwrite((unsigned char*)&header.bitmapType,1,2,imageFile);
+    fwrite((unsigned char*)&header.fileSize,1,4,imageFile);
+    fwrite((unsigned char*)&header.reserved,1,4,imageFile);
+    fwrite((unsigned char*)&header.offset,1,4,imageFile);
 
-    // Write header to file
-    fwrite(imageHeader,1,defaultHeaderSize,imageFile);
+    fwrite((unsigned char*)&infoHeader,1,40,imageFile);
 
-    // Iterate over rows, writing each time
-    int index;
-    for(index=0; index<height; index++){
-        fwrite(imageData+(index*width*defaultBytesPerPixel),1,width*defaultBytesPerPixel,imageFile);
+    for(int i=0; i<height; i++){
+        fwrite((unsigned char*)imageData+(i*width*bytesPerPixel),1,width*bytesPerPixel,imageFile);
         fwrite(paddingStructure,1,paddingSize,imageFile);
     }
 
     fclose(imageFile);
+    
 
 }
 
-unsigned char* generateBitmapHeader(int height, int width){
-    
-    // Size of file = bytes in header + bytes in image data
-    int fileSize = defaultHeaderSize +defaultBytesPerPixel*height*width;
+BitmapColor Bitmap::get(int x, int y){
 
-    // Declaring 54 char long header data. See BMP specification
-    static unsigned char header[] = {      
-        0,0,        // BM
-        0,0,0,0,    // Size of the entire file
-        0,0,0,0,    // Reserved - Unused
-        0,0,0,0,    // File offset index
-        0,0,0,0,    // Info header size ( 4o bytes)
-        0,0,0,0,    // Width (signed int)
-        0,0,0,0,    // Height (signed int)
-        0,0,        // Number of Colour planes
-        0,0,        // Num bits per pixel (colour depth)
-        0,0,0,0,    // Compression level
-        0,0,0,0,    // Image size
-        0,0,0,0,    // Horiz resolution
-        0,0,0,0,    // Vert res
-        0,0,0,0,    // Colour number
-        0,0,0,0,    // Number of important colours
-    };
-
-    // Filling in header data
-
-    header[0] = (unsigned char)'B';
-    header[1] = (unsigned char)'M';
-
-    header[2] = (unsigned char)(fileSize);
-    header[3] = (unsigned char)(fileSize>>8);
-    header[4] = (unsigned char)(fileSize>>16);
-    header[5] = (unsigned char)(fileSize>>24);
-
-    header[10] = (unsigned char)(defaultHeaderSize);
-    header[14] = (unsigned char)(40);
-
-    header[18] = (unsigned char)(width);
-    header[19] = (unsigned char)(width>>8);
-    header[20] = (unsigned char)(width>>16);
-    header[21] = (unsigned char)(width>>24);
-
-    header[22] = (unsigned char)(height);
-    header[23] = (unsigned char)(height>>8);
-    header[24] = (unsigned char)(height>>16);
-    header[25] = (unsigned char)(height>>24);
-
-    header[26] = (unsigned char)(1);
-    header[28] = (unsigned char)(defaultBytesPerPixel*8);
-
-    return header;
 }
 
-unsigned char* readBitmap(FILE* imageFile){
-    
+bool Bitmap::set(int x, int y, BitmapColor color){
+    if(!imageData || x<0 || y<0 || x>width || y>height){
+        return false;
+    }
+    memcpy(imageData+(x+y*width)*bytesPerPixel, color.array,bytesPerPixel);
+}
+
+int Bitmap::getWidth(){
+
+}
+
+int Bitmap::getHeight(){
+
+}
+
+int Bitmap::getBytesPerPixel(){
+
+}
+
+unsigned char* Bitmap::getData(){
+
+}
+
+void Bitmap::clear(){
+
+}
+
+
+
+
+int main(int argc, char const *argv[])
+{
+    Bitmap bitmap(50,50,3);
+
+    for(int i=20;i<31;i++){
+        bitmap.set(i,i,BitmapColor(0,0,255));
+    }
+
+    bitmap.writeFile("test.bmp");
+    return 0;
 }
