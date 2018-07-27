@@ -39,7 +39,7 @@ struct BitmapColor{
     union{
         struct{
             unsigned char r,b,g,a;
-        }colors;
+        };
         unsigned char array[4];
     };
     int bytesPerPixel;

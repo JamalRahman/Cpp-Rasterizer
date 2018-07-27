@@ -3,6 +3,8 @@
 #include <string.h>
 #include "bitmap.h"
 
+const int bmfhSize = 14;
+const int bmihSize = 40;
 /**
  * Constructs a Bitmap without parameters.
  * 
@@ -43,25 +45,35 @@ Bitmap::~Bitmap(){
 bool Bitmap::writeFile(const char *filename){
     
     BitmapHeader header;
+    // Zeroes the header in memory
     memset((void*)&header,0,sizeof(BitmapHeader));
     BitmapInfoHeader infoHeader;
     memset((void*)&infoHeader,0,sizeof(BitmapInfoHeader));
 
+    // Assign values to the headers, all other members are kept zeroed.
     header.bitmapType[0] = (unsigned char)'B';
     header.bitmapType[1] = (unsigned char)'M';
-    header.fileSize = 14+40+bytesPerPixel*height*width;
-    header.offset = 14+40;
-    infoHeader.infoHeaderSize = 40;
+    header.fileSize = bmfhSize+bmihSize+bytesPerPixel*height*width;
+    header.offset = bmfhSize+bmihSize;
+
+    infoHeader.infoHeaderSize = bmihSize;
     infoHeader.width = width;
     infoHeader.height = height;
     infoHeader.colorPlanes = 1;
     infoHeader.colorDepth = bytesPerPixel*8;
 
+    // Bitmaps write the image data in 4 byte DWORDS
+    // If our width is not divisible by 4 we must pad each row with zeroes
+    // to complete the DWORD
     unsigned char* paddingStructure[3] = {0,0,0};
     int paddingSize = (4 -(width*bytesPerPixel % 4))%4;
 
     FILE* imageFile = fopen(filename,"wb");
     
+    // The C++ compiler turns the Header struct from 14 bytes to 16 bytes
+    // It adds padding after the 2 byte char array.
+    // We must write the chars then subsequent ints manually
+    // Else we will write the padding
     fwrite((unsigned char*)&header.bitmapType,1,2,imageFile);
     fwrite((unsigned char*)&header.fileSize,1,4,imageFile);
     fwrite((unsigned char*)&header.reserved,1,4,imageFile);
@@ -69,14 +81,13 @@ bool Bitmap::writeFile(const char *filename){
 
     fwrite((unsigned char*)&infoHeader,1,40,imageFile);
 
+    // Write one row at a time
     for(int i=0; i<height; i++){
         fwrite((unsigned char*)imageData+(i*width*bytesPerPixel),1,width*bytesPerPixel,imageFile);
         fwrite(paddingStructure,1,paddingSize,imageFile);
     }
-
-    fclose(imageFile);
     
-
+    fclose(imageFile);
 }
 
 /**
