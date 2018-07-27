@@ -86,7 +86,7 @@ bool Bitmap::writeFile(const char *filename){
         fwrite((unsigned char*)imageData+(i*width*bytesPerPixel),1,width*bytesPerPixel,imageFile);
         fwrite(paddingStructure,1,paddingSize,imageFile);
     }
-    
+
     fclose(imageFile);
 }
 
@@ -98,7 +98,17 @@ bool Bitmap::writeFile(const char *filename){
  * @return An object which represents the Bitmap's image data at (x,y)
  */
 BitmapColor Bitmap::get(int x, int y){
+    if(!imageData || x<0 || y<0 || x>width || y>height){
+        return BitmapColor(0,0,0);
+    }
+    else{
+        int r,g,b,a;
+        unsigned char buffer[4];
+        memcpy(buffer,imageData+(x+y*width)*bytesPerPixel,4);
+        
+        return BitmapColor((const unsigned char*)buffer,bytesPerPixel);
 
+    }
 }
 
 /**
