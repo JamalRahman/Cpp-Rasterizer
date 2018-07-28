@@ -49,10 +49,21 @@ Bitmap::~Bitmap(){
     if(imageData) delete[] imageData;
 }
 
+/**
+ * Gets the number of bytes required to pad the image rows into DWORDS
+ * 
+ * @return The number of bytes of padding required
+ */
 int Bitmap::paddingSize(){
     return (4 -(ih.width*ih.colorDepth*8 % 4))%4;
 }
 
+/**
+ * Reads the contents of a .bmp file into a Bitmap object
+ * 
+ * @param filename The file to be read
+ * @return True on successful read
+ */
 bool Bitmap::readFile(const char* filename){
     
     unsigned char identifier[2];
@@ -112,7 +123,7 @@ bool Bitmap::readFile(const char* filename){
  * Writes a Bitmap object to the system as a .bmp file
  * 
  * @param filename The write location. Must include ".bmp" extension 
- * @return True on success
+ * @return True on successful write
  */
 bool Bitmap::writeFile(const char *filename){
     
