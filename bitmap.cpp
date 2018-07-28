@@ -30,7 +30,7 @@ Bitmap::Bitmap():imageData(NULL),width(0),height(0),bytesPerPixel(0){
 Bitmap::Bitmap(int w, int h, int bpp) : imageData(NULL), width(w), height(h), bytesPerPixel(bpp){
     unsigned long dataSize = width*height*bytesPerPixel;
     imageData = new unsigned char[dataSize];
-    memset(imageData, 0, dataSize);
+    memset(imageData, 255, dataSize);
 }
 
 Bitmap::~Bitmap(){
@@ -44,7 +44,7 @@ bool Bitmap::readFile(const char* filename){
     BitmapHeader header;
 
     ifstream imageFile;
-    imageFile.open(filename, std::ios::in | std::ios::binary);
+    imageFile.open(filename, std::ifstream::binary);
     
     if(imageFile.fail()){
         std::cerr<<"Failure to open file on 'read' action."<<std::endl;
@@ -65,7 +65,6 @@ bool Bitmap::readFile(const char* filename){
     imageFile.read(((char*)buffer+4),12);
 
     memcpy((void*)&header,(unsigned char*)buffer,sizeof(BitmapHeader));
-    std::cout<<header.offset<<std::endl;
 
     if(header.offset>=54){
         BitmapInfoHeader infoHeader;
@@ -76,25 +75,31 @@ bool Bitmap::readFile(const char* filename){
 
         memcpy((void*)&infoHeader,(unsigned char*)infoBuffer,sizeof(BitmapInfoHeader));
         
+        //-------------------------------------
+        std::cout<<infoHeader.infoHeaderSize<<std::endl;
+        std::cout<<header.offset<<std::endl;
+        std::cout<<infoHeader.compression<<std::endl;
+        std::cout<<infoHeader.colorDepth<<std::endl;
+        //-------------------------------------
+        
         width = infoHeader.width;
         height = infoHeader.height;
         bytesPerPixel = infoHeader.colorDepth/8;
 
-        int imageDataSize = infoHeader.width*infoHeader.height*infoHeader.colorDepth;
+        int imageDataSize = width*height*bytesPerPixel;
         imageData = new unsigned char[imageDataSize];
         memset(imageData,0,imageDataSize);
 
         unsigned char paddingStructure[3];
         int paddingSize = (4 -(width*bytesPerPixel % 4))%4;
 
-        // fread(imageData,1,imageDataSize,imageFile);
         imageFile.ignore(header.offset-54);
-        imageFile.read((char*)imageData,imageDataSize);
-        // PADDING
-        // for(int i=0;i<height;i++){
-        //     fread(imageData,1,width*bytesPerPixel,imageFile);
-        //     fread(paddingStructure,paddingSize,1,imageFile);
-        // }
+                
+        for(int i=0;i<height;i++){
+            // fread(imageData,1,width*bytesPerPixel,imageFile);
+            imageFile.read(((char*)imageData+(i*width*bytesPerPixel)),(width*bytesPerPixel));
+            imageFile.ignore(paddingSize);
+        }
     }
     else{
         std::cerr<<"BMP Version unsupported. Please use BMP v3.x"<<std::endl;
