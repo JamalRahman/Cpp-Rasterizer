@@ -2,8 +2,8 @@
 
 using std::ifstream, std::cerr, std::endl, std::ofstream;
 
-const int bmfhSize = 14;
-const int bmihSize = 40;
+const int hSize = 14;
+const int ihSize = 40;
 /**
  * Constructs a Bitmap without parameters.
  * 
@@ -35,10 +35,10 @@ Bitmap::Bitmap(int w, int h, int cd) : imageData(NULL){
 
     header.bitmapType[0] = (unsigned char)'B';
     header.bitmapType[1] = (unsigned char)'M';
-    header.fileSize = bmfhSize+bmihSize+cd*8*h*w;
-    header.offset = bmfhSize+bmihSize;
+    header.fileSize = hSize+ihSize+cd*8*h*w;
+    header.offset = hSize+ihSize;
 
-    ih.infoHeaderSize = bmihSize;
+    ih.infoHeaderSize = ihSize;
     ih.width = w;
     ih.height = h;
     ih.colorPlanes = 1;
@@ -93,7 +93,7 @@ bool Bitmap::readFile(const char* filename){
 
     memcpy((void*)&header,(unsigned char*)buffer,sizeof(BitmapHeader));
 
-    if(header.offset>=bmfhSize+bmihSize){
+    if(header.offset>=hSize+ihSize){
         unsigned char infoBuffer[40];
         imageFile.read((char*)infoBuffer,40);
         memcpy((void*)&ih,(unsigned char*)infoBuffer,sizeof(BitmapInfoHeader));
@@ -102,7 +102,7 @@ bool Bitmap::readFile(const char* filename){
         imageData = new unsigned char[imageDataSize];
         memset(imageData,0,imageDataSize);
 
-        imageFile.ignore(header.offset-(bmfhSize+bmihSize));
+        imageFile.ignore(header.offset-(hSize+ihSize));
                 
         for(int i=0;i<ih.height;i++){
             imageFile.read(((char*)imageData+(i*ih.width*ih.colorDepth*8)),(ih.width*ih.colorDepth*8));
