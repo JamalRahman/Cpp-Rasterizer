@@ -15,7 +15,7 @@ const int bmihSize = 40;
  * Image defaults to 24 bit RGB encoding
  * @return The Bitmap Object
  */
-Bitmap::Bitmap():imageData(NULL),width(0),height(0),bytesPerPixel(0){
+Bitmap::Bitmap():imageData(NULL),width(0),height(0),colorDepth(0){
 
 }
 
@@ -27,8 +27,8 @@ Bitmap::Bitmap():imageData(NULL),width(0),height(0),bytesPerPixel(0){
  * @param bpp The color depth (number of bytes per pixel) of the image
  * @return The Bitmap object
  */
-Bitmap::Bitmap(int w, int h, int bpp) : imageData(NULL), width(w), height(h), bytesPerPixel(bpp){
-    unsigned long dataSize = width*height*bytesPerPixel;
+Bitmap::Bitmap(int w, int h, int cd) : imageData(NULL), width(w), height(h), colorDepth(cd){
+    unsigned long dataSize = width*height*colorDepth*8;
     imageData = new unsigned char[dataSize];
     memset(imageData, 255, dataSize);
 }
@@ -70,34 +70,24 @@ bool Bitmap::readFile(const char* filename){
         BitmapInfoHeader infoHeader;
         unsigned char infoBuffer[40];
 
-        // fread(infoBuffer,1,40,imageFile);
         imageFile.read((char*)infoBuffer,40);
 
         memcpy((void*)&infoHeader,(unsigned char*)infoBuffer,sizeof(BitmapInfoHeader));
         
-        //-------------------------------------
-        std::cout<<infoHeader.infoHeaderSize<<std::endl;
-        std::cout<<header.offset<<std::endl;
-        std::cout<<infoHeader.compression<<std::endl;
-        std::cout<<infoHeader.colorDepth<<std::endl;
-        //-------------------------------------
-        
         width = infoHeader.width;
         height = infoHeader.height;
-        bytesPerPixel = infoHeader.colorDepth/8;
-
-        int imageDataSize = width*height*bytesPerPixel;
+        colorDepth = infoHeader.colorDepth;
+        int imageDataSize = width*height*colorDepth*8;
         imageData = new unsigned char[imageDataSize];
         memset(imageData,0,imageDataSize);
 
         unsigned char paddingStructure[3];
-        int paddingSize = (4 -(width*bytesPerPixel % 4))%4;
+        int paddingSize = (4 -(width*colorDepth*8 % 4))%4;
 
         imageFile.ignore(header.offset-54);
                 
         for(int i=0;i<height;i++){
-            // fread(imageData,1,width*bytesPerPixel,imageFile);
-            imageFile.read(((char*)imageData+(i*width*bytesPerPixel)),(width*bytesPerPixel));
+            imageFile.read(((char*)imageData+(i*width*colorDepth*8)),(width*colorDepth*8));
             imageFile.ignore(paddingSize);
         }
     }
@@ -129,20 +119,20 @@ bool Bitmap::writeFile(const char *filename){
     // Assign values to the headers, all other members are kept zeroed.
     header.bitmapType[0] = (unsigned char)'B';
     header.bitmapType[1] = (unsigned char)'M';
-    header.fileSize = bmfhSize+bmihSize+bytesPerPixel*height*width;
+    header.fileSize = bmfhSize+bmihSize+colorDepth*8*height*width;
     header.offset = bmfhSize+bmihSize;
 
     infoHeader.infoHeaderSize = bmihSize;
     infoHeader.width = width;
     infoHeader.height = height;
     infoHeader.colorPlanes = 1;
-    infoHeader.colorDepth = bytesPerPixel*8;
+    infoHeader.colorDepth = colorDepth;
 
     // Bitmaps write the image data in 4 byte DWORDS
     // If our width is not divisible by 4 we must pad each row with zeroes
     // to complete the DWORD
     unsigned char* paddingStructure[3] = {0,0,0};
-    int paddingSize = (4 -(width*bytesPerPixel % 4))%4;
+    int paddingSize = (4 -(width*colorDepth*8 % 4))%4;
 
     FILE* imageFile = fopen(filename,"wb");
     
@@ -164,7 +154,7 @@ bool Bitmap::writeFile(const char *filename){
 
     // Write one row at a time
     for(int i=0; i<height; i++){
-        fwrite((unsigned char*)imageData+(i*width*bytesPerPixel),1,width*bytesPerPixel,imageFile);
+        fwrite((unsigned char*)imageData+(i*width*colorDepth*8),1,width*colorDepth*8,imageFile);
         fwrite(paddingStructure,1,paddingSize,imageFile);
     }
 
@@ -186,9 +176,9 @@ BitmapColor Bitmap::get(int x, int y){
     else{
         int r,g,b,a;
         unsigned char buffer[4];
-        memcpy(buffer,imageData+(x+y*width)*bytesPerPixel,4);
+        memcpy(buffer,imageData+(x+y*width)*colorDepth*8,4);
         
-        return BitmapColor((const unsigned char*)buffer,bytesPerPixel);
+        return BitmapColor((const unsigned char*)buffer,colorDepth*8);
 
     }
 }
@@ -204,7 +194,7 @@ bool Bitmap::set(int x, int y, BitmapColor color){
     if(!imageData || x<0 || y<0 || x>width || y>height){
         return false;
     }
-    memcpy(imageData+(x+y*width)*bytesPerPixel, color.array,bytesPerPixel);
+    memcpy(imageData+(x+y*width)*colorDepth*8, color.array,colorDepth*8);
 }
 
 /**
@@ -217,10 +207,10 @@ unsigned char* Bitmap::getData(){
 }
 
 /**
- * Sets every pixel in the image data to black
+ * Sets every pixel in the image data to white
  */
 void Bitmap::clear(){
-    memset((void*)imageData,0,width*height*bytesPerPixel);
+    memset((void*)imageData,255,width*height*colorDepth*8);
 }
 
 /**
@@ -233,19 +223,19 @@ int Bitmap::getWidth(){
 }
 
 /**
- * Gets the pixel width of the image
+ * Gets the pixel height of the image
  * 
- * @return The width, in pixels
+ * @return The height, in pixels
  */
 int Bitmap::getHeight(){
     return height;
 }
 
 /**
- * Gets the pixel height of the image
+ * Gets the pixel color depth of the image
  * 
- * @return The height, in pixels
+ * @return Number of bits per pixel
  */
-int Bitmap::getBytesPerPixel(){
-    return bytesPerPixel;
+int Bitmap::getColorDepth(){
+    return colorDepth;
 }

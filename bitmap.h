@@ -42,19 +42,20 @@ struct BitmapColor{
             unsigned char r,g,b,a;
         };
         unsigned char array[4];
+        unsigned int val;
     };
-    int bytesPerPixel;
+    int colorDepth;
 
     // Instantiate using rgba in the constructor
-    BitmapColor(unsigned char R, unsigned char G, unsigned char B, unsigned char A) : r(R), g(G), b(B), a(A), bytesPerPixel(4){
+    BitmapColor(unsigned char R, unsigned char G, unsigned char B, unsigned char A) : r(R), g(G), b(B), a(A), colorDepth(32){
     
     };
     // Instantiate using rgb in the constructor
-    BitmapColor(unsigned char R, unsigned char G, unsigned char B) : r(R), g(G), b(B), a(255), bytesPerPixel(3){
+    BitmapColor(unsigned char R, unsigned char G, unsigned char B) : r(R), g(G), b(B), a(255), colorDepth(24){
     
     };
     // Instantiate using an array in the constructor
-    BitmapColor(const unsigned char *p, int bpp) : bytesPerPixel(bpp){
+    BitmapColor(const unsigned char *p, int bpp) : colorDepth(bpp*8){
         for(int i=0;i<bpp;i++){
             array[i] = p[i];
         }
@@ -69,11 +70,11 @@ protected:
     unsigned char* imageData;
     int width;
     int height;
-    int bytesPerPixel;
+    int colorDepth;
 
 public:
     Bitmap();
-    Bitmap(int w, int h, int bpp);
+    Bitmap(int w, int h, int cd);
 
     ~Bitmap();
 
@@ -88,7 +89,7 @@ public:
 
     int getWidth();
     int getHeight();
-    int getBytesPerPixel();
+    int getColorDepth();
 };
 
 #endif

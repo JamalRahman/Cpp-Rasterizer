@@ -11,7 +11,7 @@ int main(int argc, char const *argv[]){
 
     // bitmap.writeFile("test.bmp");
 
-    bitmap2.readFile("test2.bmp");
+    bitmap2.readFile("bass.bmp");
     bitmap2.writeFile("testOutput.bmp");
     
     return 0;
