@@ -69,10 +69,8 @@ struct BitmapColor{
 class Bitmap{
 protected:
     unsigned char* imageData;
-    int width;
-    int height;
-    int colorDepth;
     BitmapHeader header;
+    BitmapInfoHeader ih;
     
 public:
     Bitmap();
