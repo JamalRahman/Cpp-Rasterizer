@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
+
 // Stores Bitmap File Header. 14 bytes.
 // See Wikipedia for information about the Bitmap File Format
 struct BitmapHeader{

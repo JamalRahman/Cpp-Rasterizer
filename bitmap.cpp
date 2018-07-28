@@ -1,7 +1,7 @@
+#include "bitmap.h"
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
-#include "bitmap.h"
 
 const int bmfhSize = 14;
 const int bmihSize = 40;
@@ -12,10 +12,8 @@ const int bmihSize = 40;
  * Image defaults to 24 bit RGB encoding
  * @return The Bitmap Object
  */
-Bitmap::Bitmap():imageData(NULL),width(1920),height(1080),bytesPerPixel(3){
-    unsigned long dataSize = width*height*bytesPerPixel;
-    imageData = new unsigned char[dataSize];
-    memset(imageData,0,dataSize);
+Bitmap::Bitmap():imageData(NULL),width(0),height(0),bytesPerPixel(0){
+
 }
 
 /**
@@ -36,6 +34,68 @@ Bitmap::~Bitmap(){
     if(imageData) delete[] imageData;
 }
 
+bool Bitmap::readFile(const char* filename){
+    
+    unsigned char identifier[2];
+    unsigned char buffer[16];
+    BitmapHeader header;
+
+    FILE* imageFile = fopen(filename,"rb");
+    if(imageFile<0){
+        std::cerr<<"Failure to open file on 'read' action."<<std::endl;
+        return false;
+    }
+
+    fread(buffer,1,2,imageFile);
+    identifier[0]=buffer[0];
+    identifier[1]=buffer[1];
+    if(!strcmp((const char*)identifier,"BM")){
+        std::cerr<<"Failure to process image format. Unsupported Format."<<std::endl;
+        fclose(imageFile);
+        return false;
+    }
+
+    buffer[2] = (unsigned char)0;
+    buffer[3] = (unsigned char)0;
+    fread(buffer+4,1,12,imageFile);
+
+    memcpy((void*)&header,buffer,sizeof(BitmapHeader));
+    std::cout<<header.offset<<std::endl;
+    if(header.offset>=54){
+        BitmapInfoHeader infoHeader;
+        unsigned char infoBuffer[40];
+
+        fread(infoBuffer,1,40,imageFile);
+        memcpy((void*)&infoHeader,infoBuffer,sizeof(BitmapInfoHeader));
+        
+        width = infoHeader.width;
+        height = infoHeader.height;
+        bytesPerPixel = infoHeader.colorDepth/8;
+
+        int imageDataSize = infoHeader.width*infoHeader.height*infoHeader.colorDepth;
+        imageData = new unsigned char[imageDataSize];
+        memset(imageData,0,imageDataSize);
+
+        unsigned char paddingStructure[3];
+        int paddingSize = (4 -(width*bytesPerPixel % 4))%4;
+
+        // fread(imageData,1,imageDataSize,imageFile);
+        // PADDING
+        // for(int i=0;i<height;i++){
+        //     fread(imageData,1,width*bytesPerPixel,imageFile);
+        //     fread(paddingStructure,paddingSize,1,imageFile);
+        // }
+    }
+    else{
+        std::cerr<<"BMP Version unsupported. Please use BMP v3.x"<<std::endl;
+        return false;
+    }
+
+    fclose(imageFile);
+    
+    return true;
+}
+
 /**
  * Writes a Bitmap object to the system as a .bmp file
  * 
@@ -45,9 +105,10 @@ Bitmap::~Bitmap(){
 bool Bitmap::writeFile(const char *filename){
     
     BitmapHeader header;
-    // Zeroes the header in memory
-    memset((void*)&header,0,sizeof(BitmapHeader));
     BitmapInfoHeader infoHeader;
+
+    // Zeroes the headers in memory
+    memset((void*)&header,0,sizeof(BitmapHeader));
     memset((void*)&infoHeader,0,sizeof(BitmapInfoHeader));
 
     // Assign values to the headers, all other members are kept zeroed.
@@ -70,6 +131,11 @@ bool Bitmap::writeFile(const char *filename){
 
     FILE* imageFile = fopen(filename,"wb");
     
+    if(imageFile<0){
+        std::cerr<<"Failure opening file on 'write' action."<<std::endl;
+        return false;
+    }
+
     // The C++ compiler turns the Header struct from 14 bytes to 16 bytes
     // It adds padding after the 2 byte char array.
     // We must write the chars then subsequent ints manually
@@ -88,6 +154,7 @@ bool Bitmap::writeFile(const char *filename){
     }
 
     fclose(imageFile);
+    return true;
 }
 
 /**
@@ -126,6 +193,22 @@ bool Bitmap::set(int x, int y, BitmapColor color){
 }
 
 /**
+ * Gets the image data raw byte array
+ * 
+ * @return The array of bytes which stores the raw image data 
+ */
+unsigned char* Bitmap::getData(){
+    return imageData;
+}
+
+/**
+ * Sets every pixel in the image data to black
+ */
+void Bitmap::clear(){
+    memset((void*)imageData,0,width*height*bytesPerPixel);
+}
+
+/**
  * Gets the pixel width of the image
  * 
  * @return The pixel width
@@ -150,20 +233,4 @@ int Bitmap::getHeight(){
  */
 int Bitmap::getBytesPerPixel(){
     return bytesPerPixel;
-}
-
-/**
- * Gets the image data raw byte array
- * 
- * @return The array of bytes which stores the raw image data 
- */
-unsigned char* Bitmap::getData(){
-    return imageData;
-}
-
-/**
- * Sets every pixel in the image data to black
- */
-void Bitmap::clear(){
-    memset((void*)imageData,0,width*height*bytesPerPixel);
 }
