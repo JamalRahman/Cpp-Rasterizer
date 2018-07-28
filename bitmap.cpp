@@ -1,7 +1,10 @@
 #include "bitmap.h"
+#include <fstream>
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
+
+using std::ifstream;
 
 const int bmfhSize = 14;
 const int bmihSize = 40;
@@ -40,32 +43,37 @@ bool Bitmap::readFile(const char* filename){
     unsigned char buffer[16];
     BitmapHeader header;
 
-    FILE* imageFile = fopen(filename,"rb");
-    if(imageFile<0){
+    ifstream imageFile;
+    imageFile.open(filename, std::ios::in | std::ios::binary);
+    
+    if(imageFile.fail()){
         std::cerr<<"Failure to open file on 'read' action."<<std::endl;
         return false;
     }
 
-    fread(buffer,1,2,imageFile);
+    imageFile.read((char*)buffer,2);
     identifier[0]=buffer[0];
     identifier[1]=buffer[1];
     if(!strcmp((const char*)identifier,"BM")){
         std::cerr<<"Failure to process image format. Unsupported Format."<<std::endl;
-        fclose(imageFile);
+        imageFile.close();
         return false;
     }
 
     buffer[2] = (unsigned char)0;
     buffer[3] = (unsigned char)0;
-    fread(buffer+4,1,12,imageFile);
+    imageFile.read((char*)buffer+4,12);
 
     memcpy((void*)&header,buffer,sizeof(BitmapHeader));
     std::cout<<header.offset<<std::endl;
+
     if(header.offset>=54){
         BitmapInfoHeader infoHeader;
         unsigned char infoBuffer[40];
 
-        fread(infoBuffer,1,40,imageFile);
+        // fread(infoBuffer,1,40,imageFile);
+        imageFile.read((char*)infoBuffer,40);
+
         memcpy((void*)&infoHeader,infoBuffer,sizeof(BitmapInfoHeader));
         
         width = infoHeader.width;
@@ -91,7 +99,7 @@ bool Bitmap::readFile(const char* filename){
         return false;
     }
 
-    fclose(imageFile);
+    imageFile.close();
     
     return true;
 }
