@@ -1,3 +1,10 @@
+//  bitmap.cpp
+//  Bitmap (.bmp) parsing library
+//
+//  Copyright (c) 2018 Jamal Rahman
+//  Use of this source code is governed by the MIT license that can be
+//  found in the LICENSE file.
+
 #include "bitmap.h"
 
 using std::ifstream, std::cerr, std::endl, std::ofstream;

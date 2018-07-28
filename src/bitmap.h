@@ -1,3 +1,9 @@
+//  bitmap.h
+//
+//  Copyright (c) 2018 Jamal Rahman
+//  Use of this source code is governed by the MIT license that can be
+//  found in the LICENSE file.
+
 #ifndef BITMAP_H
 #define BITMAP_H
 
