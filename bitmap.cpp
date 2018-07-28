@@ -49,16 +49,21 @@ Bitmap::~Bitmap(){
     if(imageData) delete[] imageData;
 }
 
+int Bitmap::paddingSize(){
+    return (4 -(ih.width*ih.colorDepth*8 % 4))%4;
+}
+
 bool Bitmap::readFile(const char* filename){
     
     unsigned char identifier[2];
     unsigned char buffer[16];
-
     ifstream imageFile;
+
     imageFile.open(filename, ifstream::binary);
     
     if(imageFile.fail()){
         std::cerr<<"Failure to open file on 'read' action."<<std::endl;
+        imageFile.close();
         return false;
     }
 
@@ -77,34 +82,29 @@ bool Bitmap::readFile(const char* filename){
 
     memcpy((void*)&header,(unsigned char*)buffer,sizeof(BitmapHeader));
 
-    if(header.offset>=54){
+    if(header.offset>=bmfhSize+bmihSize){
         unsigned char infoBuffer[40];
-
         imageFile.read((char*)infoBuffer,40);
-
         memcpy((void*)&ih,(unsigned char*)infoBuffer,sizeof(BitmapInfoHeader));
         
         int imageDataSize = ih.width*ih.height*ih.colorDepth*8;
         imageData = new unsigned char[imageDataSize];
         memset(imageData,0,imageDataSize);
 
-        unsigned char paddingStructure[3];
-        int paddingSize = (4 -(ih.width*ih.colorDepth*8 % 4))%4;
-
-        imageFile.ignore(header.offset-54);
+        imageFile.ignore(header.offset-(bmfhSize+bmihSize));
                 
         for(int i=0;i<ih.height;i++){
             imageFile.read(((char*)imageData+(i*ih.width*ih.colorDepth*8)),(ih.width*ih.colorDepth*8));
-            imageFile.ignore(paddingSize);
+            imageFile.ignore(paddingSize());
         }
     }
     else{
         std::cerr<<"BMP Version unsupported. Please use BMP v3.x+."<<std::endl;
+        imageFile.close();
         return false;
     }
 
     imageFile.close();
-    
     return true;
 }
 
@@ -116,11 +116,9 @@ bool Bitmap::readFile(const char* filename){
  */
 bool Bitmap::writeFile(const char *filename){
     
-    // Bitmaps write the image data in 4 byte DWORDS
+    // Bitmaps store data in DWORDS
     // If our width is not divisible by 4 we must pad each row with zeroes
-    // to complete the DWORD
     unsigned char* paddingStructure[3] = {0,0,0};
-    int paddingSize = (4 -(ih.width*ih.colorDepth*8 % 4))%4;
 
     ofstream imageFile;
     imageFile.open(filename, ifstream::binary);
@@ -130,10 +128,8 @@ bool Bitmap::writeFile(const char *filename){
         return false;
     }
 
-    // The C++ compiler turns the Header struct from 14 bytes to 16 bytes
-    // It adds padding after the 2 byte char array.
+    // The C++ compiler pads the Header struct from 14 bytes to 16 bytes
     // We must write the chars then subsequent ints separately to avoid padding
-
     imageFile.write((const char*)&header.bitmapType,2);
     imageFile.write((const char*)&header.fileSize,12);
 
@@ -143,10 +139,9 @@ bool Bitmap::writeFile(const char *filename){
     // Write one row at a time
     for(int i=0; i<ih.height; i++){
         imageFile.write((const char*)imageData+(i*ih.width*ih.colorDepth*8),ih.width*ih.colorDepth*8);
-        imageFile.write((const char*)paddingStructure,paddingSize);      
+        imageFile.write((const char*)paddingStructure,paddingSize());      
     }
 
-    // fclose(imageFile);
     imageFile.close();
     return true;
 }

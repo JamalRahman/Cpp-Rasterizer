@@ -71,7 +71,7 @@ protected:
     unsigned char* imageData;
     BitmapHeader header;
     BitmapInfoHeader ih;
-    
+    int paddingSize();
 public:
     Bitmap();
     Bitmap(int w, int h, int cd);
