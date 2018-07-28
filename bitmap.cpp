@@ -92,7 +92,7 @@ bool Bitmap::readFile(const char* filename){
         }
     }
     else{
-        std::cerr<<"BMP Version unsupported. Please use BMP v3.x"<<std::endl;
+        std::cerr<<"BMP Version unsupported. Please use BMP v3.x+."<<std::endl;
         return false;
     }
 

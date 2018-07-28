@@ -71,7 +71,8 @@ protected:
     int width;
     int height;
     int colorDepth;
-
+    BitmapHeader header;
+    
 public:
     Bitmap();
     Bitmap(int w, int h, int cd);
