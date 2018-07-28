@@ -10,8 +10,8 @@ int main(int argc, char const *argv[]){
 
     // bitmap.writeFile("test.bmp");
 
-    bitmap.readFile("image.bmp");
-    bitmap.writeFile("output2.bmp");
+    bitmap.readFile("maze.bmp");
+    bitmap.writeFile("test.bmp");
     
     return 0;
 }

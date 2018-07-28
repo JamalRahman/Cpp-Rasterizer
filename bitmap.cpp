@@ -62,9 +62,9 @@ bool Bitmap::readFile(const char* filename){
 
     buffer[2] = (unsigned char)0;
     buffer[3] = (unsigned char)0;
-    imageFile.read((char*)buffer+4,12);
+    imageFile.read(((char*)buffer+4),12);
 
-    memcpy((void*)&header,buffer,sizeof(BitmapHeader));
+    memcpy((void*)&header,(unsigned char*)buffer,sizeof(BitmapHeader));
     std::cout<<header.offset<<std::endl;
 
     if(header.offset>=54){
@@ -74,7 +74,7 @@ bool Bitmap::readFile(const char* filename){
         // fread(infoBuffer,1,40,imageFile);
         imageFile.read((char*)infoBuffer,40);
 
-        memcpy((void*)&infoHeader,infoBuffer,sizeof(BitmapInfoHeader));
+        memcpy((void*)&infoHeader,(unsigned char*)infoBuffer,sizeof(BitmapInfoHeader));
         
         width = infoHeader.width;
         height = infoHeader.height;
@@ -88,6 +88,8 @@ bool Bitmap::readFile(const char* filename){
         int paddingSize = (4 -(width*bytesPerPixel % 4))%4;
 
         // fread(imageData,1,imageDataSize,imageFile);
+        imageFile.ignore(header.offset-54);
+        imageFile.read((char*)imageData,imageDataSize);
         // PADDING
         // for(int i=0;i<height;i++){
         //     fread(imageData,1,width*bytesPerPixel,imageFile);
