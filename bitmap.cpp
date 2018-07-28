@@ -1,10 +1,6 @@
 #include "bitmap.h"
-#include <fstream>
-#include <iostream>
-#include <stdio.h>
-#include <string.h>
 
-using std::ifstream;
+using std::ifstream, std::cerr, std::endl;
 
 const int bmfhSize = 14;
 const int bmihSize = 40;
@@ -44,7 +40,7 @@ bool Bitmap::readFile(const char* filename){
     BitmapHeader header;
 
     ifstream imageFile;
-    imageFile.open(filename, std::ifstream::binary);
+    imageFile.open(filename, ifstream::binary);
     
     if(imageFile.fail()){
         std::cerr<<"Failure to open file on 'read' action."<<std::endl;
