@@ -46,7 +46,7 @@ struct BitmapColor{
     // Data can be addressed as individual members or as an array of values
     union{
         struct{
-            unsigned char r,g,b,a;
+            unsigned char b,g,r,a;
         };
         unsigned char array[4];
         unsigned int val;
