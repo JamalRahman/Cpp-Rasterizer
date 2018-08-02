@@ -8,6 +8,7 @@ int main(int argc, char const *argv[]){
     
     // Populate scene
     // Render scene
+    
     Bitmap* bitmap = new Bitmap(512,512,24);
     RenderEngine renderEngine(bitmap);
 

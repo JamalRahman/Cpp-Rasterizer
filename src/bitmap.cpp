@@ -172,16 +172,19 @@ bool Bitmap::writeFile(const char *filename){
  * @param y The y coordinate
  * @return An object which represents the Bitmap's image data at (x,y)
  */
-BitmapColor Bitmap::get(int x, int y){
+Color Bitmap::get(int x, int y){
     if(!imageData || x<0 || y<0 || x>ih.width || y>ih.height){
-        return BitmapColor(0,0,0);
+        return Color(0,0,0);
     }
     else{
         int r,g,b,a;
         unsigned char buffer[4];
         memcpy(buffer,imageData+(x+y*ih.width)*ih.colorDepth/8,4);
         
-        return BitmapColor((const unsigned char*)buffer,ih.colorDepth);
+        BitmapColor bc((const unsigned char*)buffer,ih.colorDepth);
+        Color c((int) bc.r,(int) bc.g,(int) bc.b);
+        
+        return c;
 
     }
 }
@@ -193,11 +196,12 @@ BitmapColor Bitmap::get(int x, int y){
  * @param y The y coordinate
  * @param BitmapColor The color object which represents how to color the Bitmap pixel
  */
-bool Bitmap::set(int x, int y, BitmapColor color){
+bool Bitmap::set(int x, int y, Color color){
     if(!imageData || x<0 || y<0 || x>ih.width || y>ih.height){
         return false;
     }
-    memcpy(imageData+(x+y*ih.width)*ih.colorDepth/8, color.array,ih.colorDepth/8);
+    BitmapColor bc(color);
+    memcpy(imageData+(x+y*ih.width)*ih.colorDepth/8, bc.array,ih.colorDepth/8);
 }
 
 /**

@@ -11,6 +11,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
+#include "color.h"
 
 
 // Stores Bitmap File Header. 14 bytes.
@@ -55,19 +56,20 @@ struct BitmapColor{
     
 
     // Instantiate using rgba in the constructor
-    BitmapColor(unsigned char R, unsigned char G, unsigned char B, unsigned char A) : r(R), g(G), b(B), a(A), colorDepth(32){
-    
-    };
+    BitmapColor(unsigned char R, unsigned char G, unsigned char B, unsigned char A) : r(R), g(G), b(B), a(A), colorDepth(32){};
+
     // Instantiate using rgb in the constructor
-    BitmapColor(unsigned char R, unsigned char G, unsigned char B) : r(R), g(G), b(B), a(255), colorDepth(24){
-    
-    };
+    BitmapColor(unsigned char R, unsigned char G, unsigned char B) : r(R), g(G), b(B), a(255), colorDepth(24){};
+
     // Instantiate using an array in the constructor
     BitmapColor(const unsigned char *p, int bpp) : colorDepth(bpp*8){
         for(int i=0;i<bpp;i++){
             array[i] = p[i];
         }
     };
+    
+    // Instantiate using a regular Color struct in the constructor
+    BitmapColor(Color color) : colorDepth(24), r((unsigned char)color.r), g((unsigned char)color.g), b((unsigned char)color.b){};
 
 };
 
@@ -89,8 +91,8 @@ public:
     bool readFile(const char *filename);
     bool writeFile(const char *filename);
     
-    BitmapColor get(int x, int y);
-    bool set(int x, int y, BitmapColor);
+    Color get(int x, int y);
+    bool set(int x, int y, Color);
 
     unsigned char* getData();
     void clear();

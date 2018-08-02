@@ -12,4 +12,5 @@ struct Vertex{
     Vertex(int X, int Y, int Z) : x(X), y(Y), z(Z){};
 };
 
+
 #endif

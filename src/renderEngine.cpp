@@ -7,7 +7,7 @@
 
 #include "renderEngine.h"
 
-BitmapColor red(255,0,0);
+Color red(255,0,0);
 
 RenderEngine::RenderEngine(){
 
@@ -33,10 +33,10 @@ void RenderEngine::drawLine(Vertex v1, Vertex v2){
     }
 }
 
-void RenderEngine::drawPixel(int x, int y, BitmapColor color){
+void RenderEngine::drawPixel(int x, int y, Color color){
     (*bitmap).set(x,y,color);
 }
-void RenderEngine::drawPixel(Vertex v, BitmapColor color){
+void RenderEngine::drawPixel(Vertex v, Color color){
     (*bitmap).set(v.x,v.y,color);
 }
 
