@@ -12,5 +12,18 @@ struct Vertex{
     Vertex(int X, int Y, int Z) : x(X), y(Y), z(Z){};
 };
 
+class Camera{
+private:
+    Vertex v;
+    float focalLength;
+
+
+protected:
+
+
+public:
+
+
+};
 
 #endif
