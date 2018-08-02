@@ -17,7 +17,6 @@ void saveImage();
 
 class RenderEngine{
 private:
-    Scene* scene;
     Bitmap* bitmap;
 
     void drawLineX(int x0, int y0, int x1, int y1);
@@ -36,10 +35,7 @@ public:
     void drawPixel(Vertex v, Color color);
     void drawPolygon(Vertex v1, Vertex v2, Vertex v3);
     void drawObject();
-    void renderScene();
-
-    void setScene(Scene* s);
-    Scene* getScene();
+    void renderScene(Scene* s);
 
     void saveImage(const char* filename);  
 };

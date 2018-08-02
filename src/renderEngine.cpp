@@ -51,12 +51,8 @@ void RenderEngine::drawObject(){
 
 }
 
-void RenderEngine::renderScene(){
+void RenderEngine::renderScene(Scene* s){
 
-}
-
-void RenderEngine::setScene(Scene* s){
-    scene = s;
 }
 
 void RenderEngine::drawLineX(int x0, int y0, int x1, int y1){
