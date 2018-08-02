@@ -27,7 +27,7 @@ protected:
 
 public:
     RenderEngine();
-    RenderEngine(Bitmap bitmap);
+    RenderEngine(Bitmap* bitmap);
     ~RenderEngine();
 
     void drawLine(int x0, int y0, int x1, int y1);

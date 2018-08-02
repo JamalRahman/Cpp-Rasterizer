@@ -12,7 +12,7 @@ RenderEngine::RenderEngine(){
 
 }
 
-RenderEngine::RenderEngine(Bitmap b): bitmap(b){
+RenderEngine::RenderEngine(Bitmap* b): bitmap(b){
 
 }
 
