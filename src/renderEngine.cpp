@@ -7,13 +7,14 @@
 
 #include "renderEngine.h"
 
+BitmapColor red(255,0,0);
 
 RenderEngine::RenderEngine(){
 
 }
 
-RenderEngine::RenderEngine(Bitmap* b): bitmap(b){
-
+RenderEngine::RenderEngine(Bitmap* b){
+    bitmap = b;
 }
 
 RenderEngine::~RenderEngine(){
@@ -21,23 +22,29 @@ RenderEngine::~RenderEngine(){
 }
 
 
-void RenderEngine::drawLine(int x0, int y0, int x1, int y1){
-    if(abs(x0-x1)>abs(y0-y1)){
-        if(x0<x1) drawLineX(x0,y0,x1,y1);
-        else drawLineX(x1,y1,x0,y0);
+void RenderEngine::drawLine(Vertex v1, Vertex v2){
+    if(abs(v1.x-v2.x)>abs(v1.y-v2.y)){
+        if(v1.x<v2.x) drawLineX(v1.x,v1.y,v2.x,v2.y);
+        else drawLineX(v2.x,v2.y,v1.x,v1.y);
     }
     else{
-        if(y0<y1) drawLineY(x0,y0,x1,y1);
-        else drawLineY(x1,y1,x0,y0);
+        if(v1.y<v2.y) drawLineY(v1.x,v1.y,v2.x,v2.y);
+        else drawLineY(v2.x,v2.y,v1.x,v1.y);
     }
 }
 
-void RenderEngine::drawPixel(int x, int y){
-
+void RenderEngine::drawPixel(int x, int y, BitmapColor color){
+    (*bitmap).set(x,y,color);
+}
+void RenderEngine::drawPixel(Vertex v, BitmapColor color){
+    (*bitmap).set(v.x,v.y,color);
 }
 
-void RenderEngine::drawPolygon(){
-
+void RenderEngine::drawPolygon(Vertex v1, Vertex v2, Vertex v3){
+    // Use iterator (for each pair of the args)
+    drawLine(v1,v2);
+    drawLine(v1,v3);
+    drawLine(v2,v3);
 }
 
 void RenderEngine::drawObject(){
@@ -63,7 +70,7 @@ void RenderEngine::drawLineX(int x0, int y0, int x1, int y1){
         iterator = -1;
     }
     for(int x = x0;x<=x1;x++){
-        plotPoint(x,y);
+        drawPixel(x,y,red);
         e+=dy;
         if((2*(e))>=dx){
             e-=dx;
@@ -71,6 +78,7 @@ void RenderEngine::drawLineX(int x0, int y0, int x1, int y1){
         }
     }
 }
+
 void RenderEngine::drawLineY(int x0, int y0, int x1, int y1){
     int e = 0,
         x = x0,
@@ -82,12 +90,16 @@ void RenderEngine::drawLineY(int x0, int y0, int x1, int y1){
             iterator = -1;
         }
     for(int y = y0;y<=y1;y++){
-        plotPoint(x,y);
+        drawPixel(x,y,red);
         e+=dx;
         if((2*(e))>=dy){
             e-=dy;
             x+=iterator;
         }
     }
+}
+
+void RenderEngine::saveImage(const char* filename){
+    (*bitmap).writeFile(filename);
 }
 

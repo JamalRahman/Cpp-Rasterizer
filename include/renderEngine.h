@@ -9,6 +9,7 @@
 
 #include "bitmap.h"
 #include "scene.h"
+#include "primitives.h"
 
 void drawLine(int x0, int y0, int x1, int y1);
 void plotPoint(int x, int y);
@@ -30,9 +31,10 @@ public:
     RenderEngine(Bitmap* bitmap);
     ~RenderEngine();
 
-    void drawLine(int x0, int y0, int x1, int y1);
-    void drawPixel(int x, int y);
-    void drawPolygon();
+    void drawLine(Vertex v1, Vertex v2);
+    void drawPixel(int x, int y, BitmapColor color);
+    void drawPixel(Vertex v, BitmapColor color);
+    void drawPolygon(Vertex v1, Vertex v2, Vertex v3);
     void drawObject();
     void renderScene();
 
