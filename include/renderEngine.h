@@ -30,10 +30,10 @@ public:
     RenderEngine(Bitmap* bitmap);
     ~RenderEngine();
 
-    void drawLine(Vertex v1, Vertex v2);
+    void drawLine(Point3D v1, Point3D v2);
     void drawPixel(int x, int y, Color color);
-    void drawPixel(Vertex v, Color color);
-    void drawFace(Vertex v1, Vertex v2, Vertex v3);
+    void drawPixel(Point3D v, Color color);
+    void drawPolygon(Point3D v1, Point3D v2, Point3D v3);
     void drawObject();
     void renderScene(Scene* s);
 

@@ -22,7 +22,7 @@ RenderEngine::~RenderEngine(){
 }
 
 
-void RenderEngine::drawLine(Vertex v1, Vertex v2){
+void RenderEngine::drawLine(Point3D v1, Point3D v2){
     if(abs(v1.x-v2.x)>abs(v1.y-v2.y)){
         if(v1.x<v2.x) drawLineX(v1.x,v1.y,v2.x,v2.y);
         else drawLineX(v2.x,v2.y,v1.x,v1.y);
@@ -36,11 +36,11 @@ void RenderEngine::drawLine(Vertex v1, Vertex v2){
 void RenderEngine::drawPixel(int x, int y, Color color){
     (*bitmap).set(x,y,color);
 }
-void RenderEngine::drawPixel(Vertex v, Color color){
+void RenderEngine::drawPixel(Point3D v, Color color){
     (*bitmap).set(v.x,v.y,color);
 }
 
-void RenderEngine::drawPolygon(Vertex v1, Vertex v2, Vertex v3){
+void RenderEngine::drawPolygon(Point3D v1, Point3D v2, Point3D v3){
     // Use iterator (for each pair of the args)
     drawLine(v1,v2);
     drawLine(v1,v3);

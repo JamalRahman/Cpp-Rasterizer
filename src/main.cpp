@@ -12,9 +12,9 @@ int main(int argc, char const *argv[]){
     Bitmap* bitmap = new Bitmap(200,200,24);
     RenderEngine renderEngine(bitmap);
 
-    Vertex v1(100,100,0);
-    Vertex v2(17,200,0);
-    Vertex v3(200,60,0);
+    Point3D v1(100,100,0);
+    Point3D v2(17,200,0);
+    Point3D v3(200,60,0);
 
     renderEngine.drawPolygon(v1,v2,v3);
 

@@ -7,20 +7,31 @@
 #ifndef PRIMITVES
 #define PRIMITVES
 
-struct Vertex{
+struct Point3D{
     int x,y,z;
-    Vertex(int X, int Y, int Z) : x(X), y(Y), z(Z){};
+    Point3D(int X, int Y, int Z) : x(X), y(Y), z(Z){};
+};
+
+struct Point2D{
+    int x,y;
+    Point2D(int X, int Y): x(X), y(Y){};
 };
 
 struct Edge{
-    Vertex v1, v2;
-    Edge(Vertex V1, Vertex V2) : v1(V1), v2(V2){};
+    Point3D v1, v2;
+    Edge(Point3D V1, Point3D V2) : v1(V1), v2(V2){};
 };
 
+struct Face{
+    //Point3D[] Vertices
+    //Point2D[] Texture Vertices
+    //Point3D[] Normals
+
+};
 
 class Camera{
 private:
-    Vertex v;
+    Point3D v;
     float focalLength;
 
 
