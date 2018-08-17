@@ -33,7 +33,7 @@ public:
     void drawLine(Vertex v1, Vertex v2);
     void drawPixel(int x, int y, Color color);
     void drawPixel(Vertex v, Color color);
-    void drawPolygon(Vertex v1, Vertex v2, Vertex v3);
+    void drawFace(Vertex v1, Vertex v2, Vertex v3);
     void drawObject();
     void renderScene(Scene* s);
 

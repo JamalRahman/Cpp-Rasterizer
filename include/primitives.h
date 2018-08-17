@@ -12,6 +12,12 @@ struct Vertex{
     Vertex(int X, int Y, int Z) : x(X), y(Y), z(Z){};
 };
 
+struct Edge{
+    Vertex v1, v2;
+    Edge(Vertex V1, Vertex V2) : v1(V1), v2(V2){};
+};
+
+
 class Camera{
 private:
     Vertex v;

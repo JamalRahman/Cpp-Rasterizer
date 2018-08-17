@@ -9,12 +9,12 @@ int main(int argc, char const *argv[]){
     // Populate scene
     // Render scene
     
-    Bitmap* bitmap = new Bitmap(512,512,24);
+    Bitmap* bitmap = new Bitmap(200,200,24);
     RenderEngine renderEngine(bitmap);
 
     Vertex v1(100,100,0);
-    Vertex v2(250,200,0);
-    Vertex v3(200,150,0);
+    Vertex v2(17,200,0);
+    Vertex v3(200,60,0);
 
     renderEngine.drawPolygon(v1,v2,v3);
 
