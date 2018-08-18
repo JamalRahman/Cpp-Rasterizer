@@ -7,3 +7,12 @@
 
 #include "object.h"
 
+Object::Object(){
+
+
+}
+
+Object::Object(const char* filename){
+
+
+}

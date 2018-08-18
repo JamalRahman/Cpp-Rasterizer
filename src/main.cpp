@@ -16,9 +16,9 @@ int main(int argc, char const *argv[]){
     Point3D v2(17,200,0);
     Point3D v3(200,60,0);
 
-    renderEngine.drawPolygon(v1,v2,v3);
-
-    renderEngine.saveImage("myboi.bmp");
+    Object* obj = new Object();
+    
+    renderEngine.saveImage("output.bmp");
 
     return 0;
 }
