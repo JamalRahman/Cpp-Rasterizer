@@ -8,24 +8,32 @@
 #define OBJECT_H
 
 #include "primitives.h"
+#include "material.h"
 
 // A Object object stores full 3D data for an object in a scene.
 class Object{
+
 protected:
-    // Vertex list
-    // Vertex Texture List
-    // Normals list
-    // Face list
+    vector<Point3D> verts;
+    vector<Point2D> vertTexs;
+    vector<Point3D> norms;
+    vector<Face> faces;
+    
+    Material material;          // Material Data Structure
+    bool rendered;              // Visibility Flag
+    bool smooth;                // Smooth shading bit
+    Point3D sceneSpaceOrigin;   // Scene space representation of object's origin
 
-    // Material Data Structure
+public:
+    Object();
+    ~Object();
 
-    // Visibility Flag
-    // Smooth Shading Bit
-    // Scene Space Origin
+    void loadObj(const char *filename);
 
-    bool rendered;
-    int smooth;
-    Point3D sceneSpaceOrigin;
+    vector<Face> getFaces();
+    void setRendered(bool r);
+    void setSmooth(int s);
+    Point3D *getOrigin();
 };
 
 #endif

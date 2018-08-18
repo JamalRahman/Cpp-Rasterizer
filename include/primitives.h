@@ -7,6 +7,10 @@
 #ifndef PRIMITVES
 #define PRIMITVES
 
+#include <vector>
+
+using std::vector;
+
 struct Point3D{
     int x,y,z;
     Point3D(int X, int Y, int Z) : x(X), y(Y), z(Z){};
@@ -23,10 +27,9 @@ struct Edge{
 };
 
 struct Face{
-    //Point3D[] Vertices
-    //Point2D[] Texture Vertices
-    //Point3D[] Normals
-
+    vector<Point3D> verts;
+    vector<Point2D> vertTexs;
+    vector<Point3D> norms;
 };
 
 class Camera{
