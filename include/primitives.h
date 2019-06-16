@@ -39,7 +39,8 @@ struct Face{
 
 class Camera{
 private:
-    Point3D v;
+    Point3D vertex;
+    Point3D vector;
     float focalLength;
 
 

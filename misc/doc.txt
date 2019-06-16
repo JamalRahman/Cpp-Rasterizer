@@ -1,0 +1,48 @@
+
+TO DO:
+
+TURN POINT3D into FLOAT. Rework render-engine algorithms to use float values
+Parse .obj into Object data structure
+Place Object into world at some arbitrary coordinate
+    (temporarily render all vertices of obj)
+Translate Object's vertices into screen coordinates via camera projection
+Fill polygons in screen space
+Render
+
+
+
+
+
+
+
+scene
+    Scene
+        List of objects
+
+primitives
+    polygon as collection of vertices
+
+Object
+    Vertex List
+    Vertex Texture List
+    Normals List
+    Face List
+
+    Material Data Structure (extracted from .obj's linked .mtl material file)
+
+    Addition of Engine-specific data
+        Object origin vertex
+        Visibility flag
+    
+    'Material' child data structure
+
+renderEngine
+    drawPolygon iterates through arbitrarily many vertices, drawing between pairs (ignore symmetry of pairs)
+    drawObject iterates through arbitrarily many polygons
+
+
+
+Obj Parsing
+    Read line by line
+    Switch on first word (space-separated) (Or switch on first char)
+        Handle each one appropriately   

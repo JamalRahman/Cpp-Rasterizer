@@ -40,15 +40,12 @@ void RenderEngine::drawPixel(Point3D v, Color color){
     (*bitmap).set(v.x,v.y,color);
 }
 
-void RenderEngine::drawPolygon(Point3D v1, Point3D v2, Point3D v3){
-    // Use iterator (for each pair of the args)
-    drawLine(v1,v2);
-    drawLine(v1,v3);
-    drawLine(v2,v3);
+void RenderEngine::drawPolygon(Face f){
+    
 }
 
-void RenderEngine::drawObject(){
-
+void RenderEngine::drawObject(Object o){
+    
 }
 
 void RenderEngine::renderScene(Scene* s){

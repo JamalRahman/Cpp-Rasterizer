@@ -24,7 +24,7 @@ protected:
     Material* material;          // Material Data Structure
     bool rendered;              // Visibility Flag
     bool smooth;                // Smooth shading bit
-    Point3D sceneSpaceOrigin;   // Scene space representation of object's origin
+    Point3D origin;   // Object space representation of object's origin - should be (0,0,0)? 
 
 public:
     Object();
