@@ -204,6 +204,14 @@ bool Bitmap::set(int x, int y, Color color){
     memcpy(imageData+(x+y*ih.width)*ih.colorDepth/8, bc.array,ih.colorDepth/8);
 }
 
+bool Bitmap::set(int x, int y, int r, int g, int b){
+    if(!imageData || x<0 || y<0 || x>ih.width || y>ih.height){
+        return false;
+    }
+    BitmapColor bc(r, g, b);
+    memcpy(imageData+(x+y*ih.width)*ih.colorDepth/8, bc.array,ih.colorDepth/8);
+}
+
 /**
  * Gets the image data raw byte array
  * 

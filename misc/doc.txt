@@ -37,7 +37,7 @@ Object
     'Material' child data structure
 
 renderEngine
-    drawPolygon iterates through arbitrarily many vertices, drawing between pairs (ignore symmetry of pairs)
+    drawFace iterates through arbitrarily many vertices, drawing between pairs (ignore symmetry of pairs)
     drawObject iterates through arbitrarily many polygons
 
 

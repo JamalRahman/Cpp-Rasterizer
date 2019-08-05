@@ -33,11 +33,12 @@ public:
     void drawLine(Point3D v1, Point3D v2);
     void drawPixel(int x, int y, Color color);
     void drawPixel(Point3D v, Color color);
-    void drawPolygon(Face f);
+    void drawFace(Face f);
     void drawObject(Object o);
     void renderScene(Scene* s);
 
-    void saveImage(const char* filename);  
+    void saveImage(const char* filename);
+    int interpolate(int x0, int y0, int x1, int y1);  
 };
 
 #endif

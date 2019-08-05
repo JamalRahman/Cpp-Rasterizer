@@ -40,8 +40,15 @@ void RenderEngine::drawPixel(Point3D v, Color color){
     (*bitmap).set(v.x,v.y,color);
 }
 
-void RenderEngine::drawPolygon(Face f){
-    
+void RenderEngine::drawFace(Face f){
+    int vertCount = f.verts.size();
+    if(vertCount==0){
+        return;
+    }
+    drawLine(f.verts.at(0),f.verts.at(vertCount-1));
+    for(int i=0;i<vertCount-1;i++){
+        drawLine(f.verts.at(i),f.verts.at(i+1));
+    }
 }
 
 void RenderEngine::drawObject(Object o){
@@ -95,4 +102,3 @@ void RenderEngine::drawLineY(int x0, int y0, int x1, int y1){
 void RenderEngine::saveImage(const char* filename){
     (*bitmap).writeFile(filename);
 }
-

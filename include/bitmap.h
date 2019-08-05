@@ -93,6 +93,7 @@ public:
     
     Color get(int x, int y);
     bool set(int x, int y, Color);
+    bool set(int x, int y, int r, int g, int b);
 
     unsigned char* getData();
     void clear();
