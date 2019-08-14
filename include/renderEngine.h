@@ -18,9 +18,10 @@ void saveImage();
 class RenderEngine{
 private:
     Bitmap* bitmap;
-
-    void drawLineX(int x0, int y0, int x1, int y1);
-    void drawLineY(int x0, int y0, int x1, int y1);
+    float viewportZ;
+    int cW, cH, vW, vH;
+    void drawLineX(float x0, float y0, float x1, float y1);
+    void drawLineY(float x0, float y0, float x1, float y1);
 
 protected:
 
@@ -30,12 +31,15 @@ public:
     RenderEngine(Bitmap* bitmap);
     ~RenderEngine();
 
-    void drawLine(Point3D v1, Point3D v2);
+    void drawLine(Point2D v1, Point2D v2);
     void drawPixel(int x, int y, Color color);
-    void drawPixel(Point3D v, Color color);
     void drawFace(Face f);
+    void drawFilledFace(Face f);
     void drawObject(Object o);
     void renderScene(Scene* s);
+
+    Point2D projectVertex(Point3D v);
+    std::tuple<float,float> viewportTransform(float x, float y);
 
     void saveImage(const char* filename);
     int interpolate(int x0, int y0, int x1, int y1);  

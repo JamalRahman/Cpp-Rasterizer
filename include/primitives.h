@@ -12,14 +12,14 @@
 using std::vector;
 
 struct Point3D{
-    int x,y,z;
-    Point3D(int X, int Y, int Z) : x(X), y(Y), z(Z){};
+    float x,y,z;
+    Point3D(float X, float Y, float Z) : x(X), y(Y), z(Z){};
     Point3D():x(0),y(0),z(0){};
 };
 
 struct Point2D{
-    int x,y;
-    Point2D(int X, int Y): x(X), y(Y){};
+    float x,y;
+    Point2D(float X, float Y): x(X), y(Y){};
 };
 
 struct Edge{
@@ -39,9 +39,10 @@ struct Face{
 
 class Camera{
 private:
-    Point3D vertex;
-    Point3D vector;
+    Point3D loc;
+    Point3D dir;
     float focalLength;
+    int vh, vw;
 
 
 protected:
