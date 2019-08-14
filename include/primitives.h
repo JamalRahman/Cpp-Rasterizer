@@ -32,7 +32,6 @@ struct Face{
     vector<Point2D> vertTexs;
     Point3D norm;
     Face(const vector<Point3D> &v):verts(v){};
-    Face(vector<Point3D> v):verts(v){};
     Face(vector<Point3D> v, vector<Point2D> vt, Point3D n):verts(v),vertTexs(vt),norm(n){};
     Face(vector<Point3D> v, vector<Point2D> vt):verts(v),vertTexs(vt){};
     Face(vector<Point3D> v, Point3D n):verts(v),norm(n){};
