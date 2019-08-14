@@ -22,13 +22,15 @@ int main(int argc, char const *argv[]){
     Point3D v3b(100,100,0.4);
     Point3D v4b(100,50,0.4);
 
-    std::vector<Point3D> vect{v1,v2,v3,v4};
+
     std::vector<Point3D> vectb{v1b,v2b,v3b,v4b};
     std::vector<Point3D> vectb1{v2,v3,v3b,v2b};
-    Face f(vect);
     Face f1(vectb);
     Face fb1(vectb1);
-    renderEngine.drawFace(f);
+
+    Face anonFace({v1,v2,v3,v4});
+    
+    renderEngine.drawFace(anonFace);
     renderEngine.drawFace(f1);
     renderEngine.drawFace(fb1);
     renderEngine.saveImage("output.bmp");
