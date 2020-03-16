@@ -1,7 +1,13 @@
-# ClosedGL
-A built-from-scratch C++ graphics library and cli rendering tool.
+# C++ Rasterizer
+A built-from-scratch C++ bitmap library and cli rendering tool.
 
-ClosedGL is designed to transfer theoretical knowledge on vector space mathematics & rendering algorithms into a practical system.
-With that goal in mind, the project uses no libraries except the standard C++ library.
+---
+
+Ths project was an exercise in the linear algebra involved in Graphics engines, and an exercise in C++ development.
+As a task to stretch myself, I opted to code everything myself from first-principles, only using the std library.
+
+A requirement to produce images was to write a bitmap library, capable of saving three-colour-pixel data into a file on disk, manually.
+
+The cli rendering tool is able to rasterize a 3D object's wireframe and project it onto the camera's view.
 
 ---
