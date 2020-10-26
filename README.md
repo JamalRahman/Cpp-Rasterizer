@@ -11,3 +11,8 @@ A requirement to produce images was to write a bitmap library, capable of saving
 The cli rendering tool is able to rasterize a 3D object's wireframe and project it onto the camera's view.
 
 ---
+
+1. CD into the project root directory.
+2. Build the executable with `make`
+3. Run the program with `./ClosedGL`
+4. View the `output.bmp`
